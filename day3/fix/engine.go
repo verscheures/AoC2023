@@ -2,7 +2,7 @@ package fix
 
 import (
 	"bufio"
-	"fmt"
+
 	"os"
 	"regexp"
 	"strconv"
@@ -21,7 +21,7 @@ type Engine struct {
 	Ratio int
 }
 
-func (e Engine) Init(source string) {
+func (e *Engine) Init(source string) {
 	readFile, err := os.Open(source)
 
 	check(err)
@@ -48,12 +48,10 @@ func (e Engine) Init(source string) {
 	sum, ratio := e.scanLine()
 	e.Sum += sum
 	e.Ratio += ratio
-	fmt.Println("sum:", e.Sum)
-	fmt.Println("ratio:", e.Ratio)
 
 }
 
-func (e Engine) scanLine() (int, int) {
+func (e *Engine) scanLine() (int, int) {
 	count := 0
 	ratio := 0
 	reSymbol := regexp.MustCompile(`[^0-9\.]`)
