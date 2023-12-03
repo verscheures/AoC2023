@@ -29,8 +29,6 @@ to quickly create a Cobra application.`,
 func init() {
 	rootCmd.AddCommand(playCmd)
 
-	rootCmd.AddCommand(playCmd)
-
 	// Here you will define your flags and configuration settings.
 	playCmd.Flags().StringVarP(&Source, "source", "s", "", "Source directory to read from")
 	if err := playCmd.MarkFlagRequired("source"); err != nil {
