@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -21,7 +20,9 @@ func check(e error) {
 }
 
 func Parse(source string) {
-	sum := 0
+	part1 := 0
+	part2 := 0
+
 	readFile, err := os.Open(source)
 	check(err)
 	defer readFile.Close()
@@ -30,35 +31,26 @@ func Parse(source string) {
 	fileScanner.Split(bufio.ScanLines)
 
 	for fileScanner.Scan() {
-		// fileLines = append(fileLines, fileScanner.Text())
-		// sum += getNumber(fileScanner.Text())
-		sum += getAllNumbersCorrect(fileScanner.Text())
-		fmt.Println(sum)
+		line := fileScanner.Text()
+		if line == "" {
+			continue
+		}
+		part1 += getNumber(line)
+		part2 += getAllNumbersCorrect(line)
 	}
-	fmt.Println(sum)
+	fmt.Println("part 1:", part1)
+	fmt.Println("part 2:", part2)
 }
 
 func getNumber(line string) int {
 	numbers := "1234567890"
-	fmt.Println(line)
 	firstLoc := strings.IndexAny(line, numbers)
 	lastLoc := strings.LastIndexAny(line, numbers)
 	first, err := strconv.Atoi(string([]rune(line)[firstLoc]))
 	check(err)
 	last, err := strconv.Atoi(string([]rune(line)[lastLoc]))
 	check(err)
-	fmt.Println(first, " ", last)
 	return first*10 + last
-}
-
-func getAllNumbers(line string) int {
-	re := regexp.MustCompile("[0-9]|one|two|three|four|five|six|seven|eight|nine")
-
-	matches := re.FindAllString(line, -1)
-	fmt.Print(line, " ")
-	fmt.Print(hit2Num(matches[0]), " = ", matches[0])
-	fmt.Println(hit2Num(matches[len(matches)-1]), " = ", matches[len(matches)-1])
-	return hit2Num(matches[0])*10 + hit2Num(matches[len(matches)-1])
 }
 
 func getAllNumbersCorrect(line string) int {
@@ -87,7 +79,6 @@ func getAllNumbersCorrect(line string) int {
 	for k, v := range numbers {
 		f := strings.Index(line, k)
 		l := strings.LastIndex(line, k)
-		// fmt.Println(i, " ", k, v)
 		if f == -1 {
 			continue
 		}
@@ -100,36 +91,5 @@ func getAllNumbersCorrect(line string) int {
 			last.value = v
 		}
 	}
-	if first.value == -1 || last.value == -1 {
-		fmt.Println("stinker", line)
-	}
-	fmt.Println(line, " ", first.value*10+last.value)
 	return first.value*10 + last.value
-}
-
-func hit2Num(hit string) int {
-	number, err := strconv.Atoi(hit)
-	if err != nil {
-		switch hit {
-		case "one":
-			return 1
-		case "two":
-			return 2
-		case "three":
-			return 3
-		case "four":
-			return 4
-		case "five":
-			return 5
-		case "six":
-			return 6
-		case "seven":
-			return 7
-		case "eight":
-			return 8
-		case "nine":
-			return 9
-		}
-	}
-	return number
 }
